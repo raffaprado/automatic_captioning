@@ -5,7 +5,7 @@ import pysrt
 from datetime import datetime
 from googletrans import Translator
 
-genai.configure(api_key=os.getenv("AIzaSyCugGnbVo_MmKAN71w57MfK4ZWYdY_FReg"))
+genai.configure(api_key=os.getenv("KEY AQUI"))
 
 def extract_audio(video_path, audio_output_path):
 
