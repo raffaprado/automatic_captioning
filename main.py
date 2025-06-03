@@ -5,12 +5,12 @@ import pysrt
 from datetime import datetime
 from googletrans import Translator
 
-genai.configure(api_key=os.getenv("KEY AQUI"))
+genai.configure(api_key="SUA CHAVE KEY AQUI")
 
 def extract_audio(video_path, audio_output_path):
 
     try:
-        video = VideoFileClipe(video_path)
+        video = VideoFileClip(video_path)
         video.audio.write_audiofile(audio_output_path, codec='mp3')
         print(f"Áudio extraído para: {audio_output_path}")
         return True
@@ -21,15 +21,14 @@ def extract_audio(video_path, audio_output_path):
 def transcribe_audio(audio_path, language="pt"):
     model = genai.GenerativeModel('gemini-1.5-pro-latest')
     try:
-        with open(audio_path, 'rb') as audio_file:
-            response = model.generate_content(
-                genai.upload_file(audio_file.red(), mime_type="audio/mpeg"),
-                generation_config=genai.types.GerantionConfig(
-                    temperature=0.7,
-                    max_output_tokens=2048,
-                    system_instruction=f"Transcreva o áudio para texto no idioma {language}.",
-                )
+        response = model.generate_content(
+            genai.upload_file(audio_path, mime_type="audio/mpeg"), # <--- ESTA É A LINHA CORRIGIDA
+            generation_config=genai.types.GenerationConfig(
+                temperature=0.7,
+                max_output_tokens=2048,
+                system_instruction=f"Transcreva o áudio para texto no idioma {language}.",
             )
+        )
         return response.text
     except Exception as e:
         print(f"Erro ao transcrever áudio com Gemini: {e}")
@@ -119,14 +118,14 @@ def add_subtitles_to_video(video_path, srt_path, output_video_path, font='Arial'
         print(f"Erro ao adicionar legendas ao vídeo: {e}")
 
 if __name__ == "__main__":
-    video_input_path = "H:/BRUTO/TESTE_PARA_LEGENDA_AUTOMATICA.mp4" # Substitua pelo caminho do seu vídeo
+    video_input_path = "PATH TO YOUR VIDEO" # Substitua pelo caminho do seu vídeo
     audio_output_path = "extracted_audio.mp3"
     
     srt_pt_path = "subtitles_pt.srt"
     srt_en_path = "subtitles_en.srt"
     
-    video_output_pt = "H:/EDITADO/video_with_subtitles_pt.mp4"
-    video_output_en = "H:/EDITADO/video_with_subtitles_en.mp4"
+    video_output_pt = "EXIT WAY"
+    video_output_en = "EXIT WAY"
 
      # 1. Extrair áudio
     if extract_audio(video_input_path, audio_output_path):
