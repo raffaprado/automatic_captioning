@@ -67,7 +67,6 @@ def create_srt_from_segments(segments, output_srt_path):
         start_td = timedelta(seconds=start_seconds)
         end_td = timedelta(seconds=end_seconds)
 
-        # Arredondando para milissegundos corretamente
         start_time_pysrt = pysrt.SubRipTime(
             hours=int(start_td.total_seconds() // 3600),
             minutes=int((start_td.total_seconds() % 3600) // 60),
@@ -147,12 +146,10 @@ def create_text_image(text, font_path, fontsize, text_color, img_width, outline_
         line_width = bbox[2] - bbox[0]
         x_offset = (img_width - line_width) / 2
 
-        # Desenha a borda
         for x_outline in range(-outline_width, outline_width + 1):
             for y_outline in range(-outline_width, outline_width + 1):
                 draw.text((x_offset + x_outline, y_offset + y_outline), line, font=font, fill=outline_color)
 
-        # Desenha o texto principal
         draw.text((x_offset, y_offset), line, font=font, fill=text_color)
 
         y_offset += (bbox[3] - bbox[1])
@@ -201,7 +198,7 @@ def add_subtitles_to_video(video_path, srt_path, output_video_path, font_name='A
                 font_file_path,
                 fontsize,
                 text_color,
-                int(video_width * 0.9),  # Largura da imagem do texto
+                int(video_width * 0.9),  
                 outline_color=outline_color,
                 outline_width=outline_width
             )
@@ -263,7 +260,7 @@ if __name__ == "__main__":
         full_transcribed_text, segments_base = transcribe_audio_with_local_model(audio_output_path,
                                                                                  language=IDIOMA_BASE)
 
-        if full_transcribed_text and segments_base is not None:  # Verifica se segments_base não é None
+        if full_transcribed_text and segments_base is not None:  
             print(f"\nTranscrição em {IDIOMA_BASE.upper()}:")
             print(full_transcribed_text[:500] + "...")
 
@@ -278,33 +275,27 @@ if __name__ == "__main__":
                     print(f"\nTradução para {IDIOMA_TRADUCAO.upper()}:")
                     print(translated_text[:500] + "...")
 
-                    # Para a legenda traduzida, precisamos re-segmentar o texto traduzido
-                    # com base na duração dos segmentos originais.
-                    # Isso é uma estimativa, pois a API do googletrans não fornece timestamps.
+               
                     translated_segments = []
 
-                    # Divide o texto traduzido em palavras para distribuição
                     translated_words = translated_text.split()
                     total_translated_words = len(translated_words)
 
-                    # Calcular a duração total dos segmentos originais
                     total_original_duration = segments_base[-1]['end'] if segments_base else 0
 
                     current_word_index = 0
                     for segment in segments_base:
                         segment_duration = segment['end'] - segment['start']
 
-                        # Estimar quantas palavras traduzidas para este segmento
-                        # Proporção da duração do segmento em relação à duração total
+                  
                         if total_original_duration > 0:
                             word_count_for_segment = int(
                                 (segment_duration / total_original_duration) * total_translated_words)
-                            if word_count_for_segment == 0 and total_translated_words > 0:  # Garante pelo menos uma palavra para segmentos curtos
+                            if word_count_for_segment == 0 and total_translated_words > 0: 
                                 word_count_for_segment = 1
                         else:
                             word_count_for_segment = 0
 
-                        # Garante que não exceda o número total de palavras
                         if current_word_index + word_count_for_segment > total_translated_words:
                             word_count_for_segment = total_translated_words - current_word_index
 
@@ -318,7 +309,6 @@ if __name__ == "__main__":
                         })
                         current_word_index += word_count_for_segment
 
-                    # Se sobrar texto traduzido (devido a arredondamentos), anexa ao último segmento
                     if current_word_index < total_translated_words and translated_segments:
                         translated_segments[-1]['text'] += " " + " ".join(translated_words[current_word_index:])
 
