@@ -1,80 +1,100 @@
-# 🎥 Auto Subtitles Generator with Gemini AI and MoviePy
+🎥 AutoSub Translator
 
-This project automates the subtitle creation process for videos using **Google Gemini AI** for transcription, **Google Translate** for translation, and **MoviePy** to burn subtitles directly into the video.
+Este projeto é uma pipeline completa que transforma vídeos em conteúdos legendados automaticamente, com suporte para transcrição, tradução e inserção de legendas no vídeo.
 
----
+✅ Funcionalidades
 
-## ⚙️ Features
+🎿 Extração de áudio de vídeos .mp4
 
-* ✅ Extract audio from a video file (.mp4)
-* ✅ Automatic transcription with Gemini AI
-* ✅ Generate `.srt` subtitle files
-* ✅ Translate subtitles into other languages using Google Translate
-* ✅ Burn subtitles into the video (multiple languages supported)
+🧠 Transcrição automática com OpenAI Whisper
 
----
+🌍 Tradução opcional para outros idiomas (via googletrans)
 
-## 🧰 Requirements
+📝 Geração de legendas no formato .srt
 
-* Python 3.8+
-* A Google Gemini API key
-* Install the required libraries:
+🖼️ Renderização de legendas como imagens com tipografia customizada
 
-```bash
-pip install moviepy pysrt google-generativeai googletrans==4.0.0-rc1
-```
+📽️ Exportação de vídeo com legendas embutidas (hardcoded)
 
-> ⚠️ `googletrans` might fail for large texts or rate-limited by Google. For production, consider using Google Cloud Translate API.
+📆 Requisitos
 
----
+Python 3.8+
 
-## 🚀 How to Use
+ffmpeg (instalado no sistema)
 
-1. **Set your input video path:**
+Instalar dependências
 
-```python
-video_input_path = "PATH TO YOUR VIDEO"
-```
+pip install -r requirements.txt
 
-2. **Add your Gemini API key:**
+Dependências principais:
 
-```python
-genai.configure(api_key="YOUR_API_KEY_HERE")
-```
+moviepy
 
-3. **Run the main script:**
+openai-whisper
 
-```bash
-python your_script.py
-```
+pysrt
 
-4. The script will:
+googletrans==4.0.0rc1
 
-   * Extract the audio from the video
-   * Transcribe the audio to text
-   * Create an `.srt` subtitle file
-   * Optionally translate the subtitles
-   * Add subtitles to the video
+Pillow
 
----
+torch
 
-## 📌 Notes
+🚀 Como Usar
 
-* Gemini AI transcription is limited by token size. Long videos might get truncated.
-* Subtitle timing is based on average words per second.
-* `TextClip` rendering may fail if the font isn't installed on your system.
+Coloque seu vídeo .mp4 na pasta desejada
 
----
+Rode o script principal:
 
-## 🧠 Credits
+python main.py
 
-* [MoviePy](https://zulko.github.io/moviepy/)
-* [Google Generative AI](https://ai.google.dev/)
-* [Googletrans](https://github.com/ssut/py-googletrans)
-* [pysrt](https://github.com/byroot/pysrt)
+Informe o idioma original do vídeo (pt, en, etc.)
 
----
+As legendas serão geradas automaticamente em:
 
-## 📄 License
+output/video.srt (original)
 
-This project is free to use for educational and prototyping purposes. For commercial use, review the terms of service of the respective APIs and libraries.
+output/video_translated.srt (traduzido, se desejar)
+
+Os vídeos legendados são exportados para:
+
+output/legendado_original.mp4
+
+output/legendado_traduzido.mp4
+
+📁 Estrutura
+
+.
+├── main.py
+├── fonts/
+│   └── Arial.ttf
+├── output/
+│   ├── audio.mp3
+│   ├── video.srt
+│   ├── video_translated.srt
+│   ├── legendado_original.mp4
+│   └── legendado_traduzido.mp4
+
+🚰 Personalização
+
+Fonte das legendas: edite font_path no script
+
+Tamanho e cor: fontsize, text_color, stroke_color
+
+Idioma da transcrição: language = 'pt', 'en', etc.
+
+Tradução automática: altere target_language = 'en', 'es', etc.
+
+🧐 Créditos
+
+Transcrição: Whisper
+
+Tradução: googletrans
+
+Renderização: Pillow
+
+Edição de vídeo: MoviePy
+
+📄 Licença
+
+Este projeto é de uso livre para fins educacionais e não comerciais.
